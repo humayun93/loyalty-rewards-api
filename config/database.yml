@@ -18,6 +18,9 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV["DB_HOST"] %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
 
 
 development:
@@ -82,8 +85,6 @@ production:
   primary: &primary_production
     <<: *default
     database: loyalty_rewards_api_production
-    username: loyalty_rewards_api
-    password: <%= ENV["LOYALTY_REWARDS_API_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
     database: loyalty_rewards_api_production_cache
