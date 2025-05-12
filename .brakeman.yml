@@ -1,0 +1,9 @@
+check_files:
+  - app/controllers
+  - app/models
+  - app/services
+  - config/
+
+# Enable all the checks (default) for security analysis
+checks:
+  - all
