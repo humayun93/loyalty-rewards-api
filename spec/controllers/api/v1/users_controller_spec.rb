@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  # Use the sequence in factory instead of hardcoding subdomain
   let!(:client1) { create(:client, name: 'Client One') }
   let!(:client2) { create(:client, name: 'Client Two') }
   
@@ -15,7 +14,6 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   
   describe 'when authenticated as client1' do
     before do
-      # Create test users within their tenant context
       ActsAsTenant.with_tenant(client1) do
         @client1_user1 = create(:user, user_id: 'user1@client1.com')
         @client1_user2 = create(:user, user_id: 'user2@client1.com')

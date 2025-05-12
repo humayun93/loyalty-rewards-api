@@ -21,8 +21,6 @@ module Api
         @user = User.new(user_params)
 
         # No need to set client_id, acts_as_tenant does this automatically
-        # @user.client = current_client
-
         if @user.save
           render json: @user, status: :created
         else
