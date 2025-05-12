@@ -1,4 +1,4 @@
-# 🎁 Loyalty Program API
+# Loyalty Program API
 
 A scalable, multi-tenant API for issuing loyalty points and rewards to users, designed for businesses that want to incentivize their customers based on spending behavior.
 
@@ -6,7 +6,7 @@ Built with **Ruby on Rails 7** and **PostgreSQL**, using **schema-per-tenant** i
 
 ---
 
-## 📌 Why Multi-Tenant (Schema-per-Tenant)?
+## Why Multi-Tenant (Schema-per-Tenant)?
 
 This system is designed to support multiple client businesses each operating with isolated data.
 
@@ -22,7 +22,7 @@ This architecture enables **safe multi-client usage**, scales with workload, and
 
 ---
 
-## 📅 Development Plan
+## Development Plan
 
 - [x] Initialize Rails 7 API-only app with PostgreSQL
 - [x] Set up `Client` model with token-based auth
@@ -48,7 +48,7 @@ This architecture enables **safe multi-client usage**, scales with workload, and
 
 ---
 
-## 🧱 Stack
+## Stack
 
 - Ruby on Rails 7 (API-only)
 - PostgreSQL 13+
@@ -58,7 +58,7 @@ This architecture enables **safe multi-client usage**, scales with workload, and
 - Docker (for deployment)
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ```bash
 # Install gems
