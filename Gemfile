@@ -37,6 +37,9 @@ gem "thruster", require: false
 
 gem "dotenv-rails"
 
+# Multi-tenancy
+gem 'acts_as_tenant'
+
 group :development, :test do
   gem "pry"
 

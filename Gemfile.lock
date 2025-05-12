@@ -72,6 +72,8 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    acts_as_tenant (1.0.1)
+      rails (>= 6.0)
     ast (2.4.3)
     base64 (0.2.0)
     bcrypt_pbkdf (1.1.1)
@@ -351,6 +353,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  acts_as_tenant
   bootsnap
   brakeman
   database_cleaner-active_record
