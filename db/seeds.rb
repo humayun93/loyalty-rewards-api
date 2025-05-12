@@ -20,7 +20,7 @@ clients = [
 clients.each do |client_attrs|
   client = Client.find_or_initialize_by(subdomain: client_attrs[:subdomain])
   client.name = client_attrs[:name]
-  
+
   if client.new_record?
     client.save!
     puts "Created client #{client.name} with token: #{client.api_token}"

@@ -1,6 +1,6 @@
 class Client < ApplicationRecord
   has_secure_token :api_token, length: 24
-  
+
   validates :name, presence: true
   validates :subdomain, presence: true, uniqueness: true,
     format: {
