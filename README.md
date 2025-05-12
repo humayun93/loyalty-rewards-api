@@ -26,7 +26,7 @@ This architecture enables **safe multi-client usage**, scales with workload, and
 
 - [x] Initialize Rails 7 API-only app with PostgreSQL
 - [x] Set up `Client` model with token-based auth
-- [x] Add middleware for tenant switching using `apartment` gem
+- [x] Add middleware for tenant switching using `act_as_tanent` gem
 - [x] Create `User` model (per-tenant)
 - [x] Implement `Transaction` model and points-earning rules:
   - $100 = 10 points
