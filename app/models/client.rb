@@ -1,5 +1,10 @@
 class Client < ApplicationRecord
+  # Client acts as the tenant model for multi-tenancy
+  # This will be used by ActsAsTenant to set current_tenant
+
   has_secure_token :api_token, length: 24
+
+  has_many :users, dependent: :destroy
 
   validates :name, presence: true
   validates :subdomain, presence: true, uniqueness: true,

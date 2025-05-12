@@ -6,6 +6,9 @@ class ApplicationController < ActionController::API
   def authenticate_client!
     unless current_client
       render json: { error: "Unauthorized" }, status: :unauthorized
+    else
+      # Set the current tenant based on client's subdomain
+      ActsAsTenant.current_tenant = current_client
     end
   end
 
