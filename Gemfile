@@ -38,11 +38,11 @@ gem "thruster", require: false
 gem "dotenv-rails"
 
 # Multi-tenancy
-gem 'acts_as_tenant'
+gem "acts_as_tenant"
 
 # API Documentation
-gem 'rswag-api'
-gem 'rswag-ui'
+gem "rswag-api"
+gem "rswag-ui"
 
 group :development, :test do
   gem "pry"

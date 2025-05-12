@@ -11,8 +11,8 @@ Rails.application.routes.draw do
       resources :users, param: :user_id
     end
   end
-  
+
   # Mount Swagger UI and API documentation
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
 end
