@@ -380,7 +380,7 @@ DEPENDENCIES
   solid_cable
   solid_cache
   solid_queue
-  swagger-blocks
+  swagger-blocks (= 3.0.0)
   thruster
   tzinfo-data
 

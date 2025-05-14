@@ -41,7 +41,7 @@ gem "dotenv-rails"
 gem "acts_as_tenant"
 
 # API Documentation
-gem "swagger-blocks"
+gem "swagger-blocks", "3.0.0"
 gem "rswag-api"
 gem "rswag-ui"
 

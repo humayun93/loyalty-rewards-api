@@ -5,12 +5,12 @@
     "description": "API for managing user loyalty rewards",
     "version": "v1",
     "contact": {
-      "email": "support@example.com"
+      "email": "support@{host}"
     }
   },
   "servers": [
     {
-      "url": "{protocol}://{subdomain}.example.com/api/v1",
+      "url": "{protocol}://{host}/api/v1",
       "variables": {
         "protocol": {
           "enum": [
@@ -19,9 +19,9 @@
           ],
           "default": "https"
         },
-        "subdomain": {
-          "default": "client1",
-          "description": "Client subdomain for multi-tenant access"
+        "host": {
+          "default": "localhost:3000",
+          "description": "API server host, configured via environment variables"
         }
       }
     }
@@ -524,7 +524,7 @@
         "properties": {
           "user_id": {
             "type": "string",
-            "description": "Unique identifier for the user within the client"
+            "description": "Unique identifier for the user within the client. Must be URL-safe (only letters, numbers, hyphens, underscores, and tildes). Cannot contain spaces, periods, or email addresses. UUIDs are recommended."
           },
           "birth_date": {
             "type": "string",

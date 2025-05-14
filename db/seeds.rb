@@ -23,7 +23,7 @@ clients.each do |client_attrs|
 
   if client.new_record?
     client.save!
-    puts "Created client #{client.name} with token: #{client.api_token}"
+    puts "Created client #{client.name}, subdmain: #{client.subdmain} with token: #{client.api_token}"
   else
     puts "Client #{client.name} already exists"
   end
