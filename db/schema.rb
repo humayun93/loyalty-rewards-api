@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_13_000001) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_13_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pgcrypto"
 
   create_table "clients", force: :cascade do |t|
     t.string "name"
@@ -23,11 +24,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_000001) do
     t.index ["api_token"], name: "index_clients_on_api_token", unique: true
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "currency", default: "USD", null: false
+    t.boolean "foreign", default: false, null: false
+    t.decimal "points_earned", precision: 10, scale: 2, default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "client_id", null: false
+    t.index ["client_id"], name: "index_transactions_on_client_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "user_id", null: false
     t.datetime "joining_date"
     t.datetime "birth_date"
-    t.integer "points", default: 0, null: false
+    t.decimal "points", precision: 10, scale: 2, default: 0, null: false
     t.bigint "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -35,5 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_000001) do
     t.index ["client_id"], name: "index_users_on_client_id"
   end
 
+  add_foreign_key "transactions", "clients"
+  add_foreign_key "transactions", "users"
   add_foreign_key "users", "clients"
 end

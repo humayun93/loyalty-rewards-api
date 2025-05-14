@@ -219,6 +219,66 @@
         }
       }
     },
+    "/users/{user_id}/transactions": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "description": "Unique identifier for the user within the client",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Create a new transaction",
+        "description": "Creates a new transaction for the specified user",
+        "operationId": "createTransaction",
+        "tags": [
+          "transactions"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnprocessableEntity"
+          }
+        }
+      }
+    },
     "/ping": {
       "get": {
         "summary": "API health check",
@@ -325,6 +385,88 @@
         "required": [
           "user_id"
         ]
+      },
+      "TransactionInput": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "float",
+            "description": "Transaction amount"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code (e.g., USD, EUR)"
+          },
+          "foreign": {
+            "type": "boolean",
+            "description": "Whether this is a foreign transaction",
+            "default": false
+          }
+        },
+        "required": [
+          "amount",
+          "currency"
+        ]
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true,
+            "description": "Internal database ID"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "The user ID associated with this transaction"
+          },
+          "amount": {
+            "type": "string",
+            "description": "Transaction amount"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code"
+          },
+          "foreign": {
+            "type": "boolean",
+            "description": "Whether this is a foreign transaction"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "amount",
+          "currency"
+        ]
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "transaction": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "points_earned": {
+            "type": "number",
+            "format": "float",
+            "description": "Points earned from this transaction"
+          },
+          "user_total_points": {
+            "type": "number",
+            "format": "float",
+            "description": "User's total points after this transaction"
+          }
+        }
       },
       "Error": {
         "type": "object",
