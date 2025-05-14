@@ -15,7 +15,7 @@ module Api
         if @transaction.save
           # Process the transaction (calculate and add points to user)
           points_earned = PointsService.process_transaction(@transaction)
-          
+
           # Check for rewards
           reward_engine = RewardEngine.new(@user)
           rewards_issued = reward_engine.process_transaction(@transaction)

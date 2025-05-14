@@ -11,8 +11,8 @@ Rails.application.routes.draw do
       resources :users, param: :user_id do
         resources :transactions, only: [ :create ]
         member do
-          get 'points'
-          get 'rewards'
+          get "points"
+          get "rewards"
         end
       end
     end

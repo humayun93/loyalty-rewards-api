@@ -333,6 +333,109 @@
         }
       }
     },
+    "/users/{user_id}/points": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "description": "Unique identifier for the user within the client",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get user points information",
+        "description": "Returns information about a user's points including current, monthly, and yearly totals",
+        "operationId": "getUserPoints",
+        "tags": [
+          "points"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's points information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPoints"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/users/{user_id}/rewards": {
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "description": "Unique identifier for the user within the client",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "required": false,
+          "description": "Filter rewards by status (active, redeemed, all)",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "active",
+              "redeemed",
+              "all"
+            ],
+            "default": "active"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get user rewards",
+        "description": "Returns a list of rewards for the specified user, filtered by status if provided",
+        "operationId": "getUserRewards",
+        "tags": [
+          "rewards"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user's rewards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRewards"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/ping": {
       "get": {
         "summary": "API health check",
@@ -538,6 +641,99 @@
             }
           }
         }
+      },
+      "UserPoints": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "The user ID"
+          },
+          "current_points": {
+            "type": "number",
+            "format": "float",
+            "description": "Current total points balance"
+          },
+          "monthly_points": {
+            "type": "object",
+            "description": "Points earned by month",
+            "additionalProperties": {
+              "type": "number",
+              "format": "float"
+            }
+          },
+          "yearly_points": {
+            "type": "object",
+            "description": "Points earned by year",
+            "additionalProperties": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        },
+        "required": [
+          "user_id",
+          "current_points",
+          "monthly_points",
+          "yearly_points"
+        ]
+      },
+      "Reward": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true,
+            "description": "Internal database ID"
+          },
+          "reward_type": {
+            "type": "string",
+            "description": "Type of reward (e.g., free_coffee, movie_tickets)"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "redeemed",
+              "expired"
+            ],
+            "description": "Current status of the reward"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "reward_type",
+          "status"
+        ]
+      },
+      "UserRewards": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "The user ID"
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reward"
+            }
+          }
+        },
+        "required": [
+          "user_id",
+          "rewards"
+        ]
       }
     },
     "responses": {

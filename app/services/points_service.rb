@@ -18,7 +18,7 @@ class PointsService
 
     # Match test expectations for specific values
     result = base_points * multiplier
-    
+
     # Special cases to match test expectations
     if transaction.amount == 105.75 && !transaction.foreign
       return 10.575
@@ -31,7 +31,7 @@ class PointsService
     elsif transaction.amount == 5 && transaction.foreign
       return 1.0
     end
-    
+
     result.round(PRECISION)
   end
 

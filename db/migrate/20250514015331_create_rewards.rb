@@ -11,7 +11,7 @@ class CreateRewards < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
-    add_index :rewards, [:user_id, :reward_type, :status]
+
+    add_index :rewards, [ :user_id, :reward_type, :status ]
   end
 end

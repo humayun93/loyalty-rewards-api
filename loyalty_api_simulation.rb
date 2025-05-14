@@ -126,7 +126,7 @@ class LoyaltyRewardsApiClient
     uri = URI.parse("#{@base_url}#{path}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
-    
+
     request = Net::HTTP::Get.new(uri.request_uri, @headers)
     make_request(http, request)
   end
@@ -135,7 +135,7 @@ class LoyaltyRewardsApiClient
     uri = URI.parse("#{@base_url}#{path}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
-    
+
     request = Net::HTTP::Post.new(uri.request_uri, @headers)
     request.body = params.to_json
     make_request(http, request)
@@ -145,7 +145,7 @@ class LoyaltyRewardsApiClient
     uri = URI.parse("#{@base_url}#{path}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
-    
+
     request = Net::HTTP::Put.new(uri.request_uri, @headers)
     request.body = params.to_json
     make_request(http, request)
@@ -155,14 +155,14 @@ class LoyaltyRewardsApiClient
     uri = URI.parse("#{@base_url}#{path}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = (uri.scheme == 'https')
-    
+
     request = Net::HTTP::Delete.new(uri.request_uri, @headers)
     make_request(http, request)
   end
 
   def make_request(http, request)
     response = http.request(request)
-    
+
     if response.body && !response.body.empty?
       JSON.parse(response.body)
     else
@@ -195,7 +195,7 @@ def run_simulation
   puts "\n=== Creating new users ==="
   user1_id = SecureRandom.uuid
   user2_id = SecureRandom.uuid
-  
+
   client1.create_user(user1_id, '1990-01-15', Date.today.prev_month.to_s)
   client2.create_user(user2_id, '1985-05-20', Date.today.prev_month.to_s)
 
@@ -210,7 +210,7 @@ def run_simulation
   client1.create_transaction(user1_id, 100.0)
   # Foreign transaction (2x points)
   client1.create_transaction(user1_id, 100.0, 'EUR', true)
-  
+
   # For client2 user
   client2.create_transaction(user2_id, 200.0)
 
@@ -223,7 +223,7 @@ def run_simulation
   puts "\n=== Creating more transactions to trigger rewards ==="
   # Add enough transactions to pass the monthly threshold (100+ points)
   client1.create_transaction(user1_id, 900.0)
-  
+
   # For new user spending reward (1000+ within first 60 days)
   client2.create_transaction(user2_id, 900.0)
 
@@ -231,20 +231,20 @@ def run_simulation
   puts "\n=== Checking rewards ==="
   client1.get_user_rewards(user1_id)
   client2.get_user_rewards(user2_id)
-  
+
   # Check all rewards (including redeemed ones)
   client1.get_user_rewards(user1_id, 'all')
 
   # Step 8: Update user information
   puts "\n=== Updating user information ==="
   client1.update_user(user1_id, { birth_date: Date.today.strftime('%Y-%m-%d') })
-  
+
   # Step 9: Delete a user (uncomment if needed)
   # puts "\n=== Deleting a user ==="
   # client1.delete_user(user1_id)
-  
+
   puts "\n=== Simulation Complete ==="
 end
 
 # Run the simulation
-run_simulation 
+run_simulation
