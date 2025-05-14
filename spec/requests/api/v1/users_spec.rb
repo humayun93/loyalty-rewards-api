@@ -18,9 +18,12 @@ RSpec.describe 'API V1 Users', type: :request do
       @auth_headers = { 'Authorization' => "Bearer #{client1.api_token}", 'Accept' => 'application/json' }
     end
     
+    after do
+      ActsAsTenant.current_tenant = nil
+    end
+    
     describe 'GET /api/v1/users' do
       it 'returns only users for client1' do
-        
         get '/api/v1/users', headers: @auth_headers
         
         expect(response).to have_http_status(:ok)
@@ -43,8 +46,6 @@ RSpec.describe 'API V1 Users', type: :request do
       end
       
       it 'cannot access users from client2' do
-        # Set the current tenant before making the request
-        
         get "/api/v1/users/#{@client2_user.user_id}", headers: @auth_headers
         
         expect(response).to have_http_status(:not_found)
@@ -53,8 +54,6 @@ RSpec.describe 'API V1 Users', type: :request do
     
     describe 'POST /api/v1/users' do
       it 'creates a user associated with client1' do
-        # Set the current tenant before making the request
-        
         new_uuid = SecureRandom.uuid
         user_params = {
           user: {
@@ -119,8 +118,6 @@ RSpec.describe 'API V1 Users', type: :request do
     
     describe 'PATCH/PUT /api/v1/users/:user_id' do
       it 'updates the requested user' do
-        # Set the current tenant before making the request
-        
         updated_params = {
           user: {
             birth_date: '1995-05-05'
@@ -170,8 +167,6 @@ RSpec.describe 'API V1 Users', type: :request do
       end
       
       it 'cannot update users from client2' do
-        # Set the current tenant before making the request
-        
         updated_params = {
           user: {
             birth_date: '1995-05-05'
@@ -186,8 +181,6 @@ RSpec.describe 'API V1 Users', type: :request do
     
     describe 'DELETE /api/v1/users/:user_id' do
       it 'destroys the requested user' do
-        # Set the current tenant before making the request
-        
         expect {
           delete "/api/v1/users/#{@client1_user1.user_id}", headers: @auth_headers
         }.to change { 
@@ -198,8 +191,6 @@ RSpec.describe 'API V1 Users', type: :request do
       end
       
       it 'cannot destroy users from client2' do
-        # Set the current tenant before making the request
-        
         expect {
           delete "/api/v1/users/#{@client2_user.user_id}", headers: @auth_headers
         }.not_to change {
@@ -233,9 +224,6 @@ RSpec.describe 'API V1 Users', type: :request do
     
     describe 'GET /api/v1/users' do
       it 'returns only users for client2' do
-        # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client2
-        
         get '/api/v1/users', headers: @auth_headers
         
         expect(response).to have_http_status(:ok)
@@ -244,6 +232,115 @@ RSpec.describe 'API V1 Users', type: :request do
         expect(json_response.length).to eq(1)
         expect(json_response[0]['user_id']).to eq(@client2_user.user_id)
       end
+    end
+  end
+
+  describe 'GET /api/v1/users/:user_id/points' do
+    before do
+      @auth_headers = { 'Authorization' => "Bearer #{client1.api_token}", 'Accept' => 'application/json' }
+    end
+    
+    let(:user) { create(:user, client: client1) }
+    
+    before do
+      with_tenant(client1) do
+        # Create some transactions for testing
+        create(:transaction, user: user, client: client1, amount: 100, points_earned: 10, 
+               created_at: Date.today)
+        create(:transaction, user: user, client: client1, amount: 200, points_earned: 20,
+               created_at: Date.today - 2.months)
+      end
+    end
+    
+    after do
+      ActsAsTenant.current_tenant = nil
+    end
+    
+    it 'returns the user points information' do
+      get "/api/v1/users/#{user.user_id}/points", headers: @auth_headers
+      
+      expect(response).to have_http_status(:ok)
+      
+      json_response = JSON.parse(response.body)
+      expect(json_response['user_id']).to eq(user.user_id)
+      expect(json_response['current_points'].to_f).to eq(user.points.to_f)
+      expect(json_response).to have_key('monthly_points')
+      expect(json_response).to have_key('yearly_points')
+    end
+    
+    it 'returns 404 for non-existent user' do
+      get '/api/v1/users/non-existent/points', headers: @auth_headers
+      
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+  
+  describe 'GET /api/v1/users/:user_id/rewards' do
+    before do
+      @auth_headers = { 'Authorization' => "Bearer #{client1.api_token}", 'Accept' => 'application/json' }
+    end
+    
+    let(:user) { create(:user, client: client1) }
+    
+    before do
+      with_tenant(client1) do
+        # Create some rewards for testing
+        create(:reward, user: user, client: client1, reward_type: 'free_coffee', status: 'active')
+        create(:reward, user: user, client: client1, reward_type: 'free_coffee', status: 'redeemed')
+        create(:reward, user: user, client: client1, reward_type: 'movie_tickets', status: 'active')
+      end
+    end
+    
+    after do
+      ActsAsTenant.current_tenant = nil
+    end
+    
+    context 'with default status (active)' do
+      it 'returns only active rewards' do
+        get "/api/v1/users/#{user.user_id}/rewards", headers: @auth_headers
+        
+        expect(response).to have_http_status(:ok)
+        
+        json_response = JSON.parse(response.body)
+        expect(json_response['user_id']).to eq(user.user_id)
+        expect(json_response['rewards'].count).to eq(2)
+        
+        reward_types = json_response['rewards'].map { |r| r['status'] }.uniq
+        expect(reward_types).to eq(['active'])
+      end
+    end
+    
+    context 'with status=all parameter' do
+      it 'returns all rewards regardless of status' do
+        get "/api/v1/users/#{user.user_id}/rewards?status=all", headers: @auth_headers
+        
+        expect(response).to have_http_status(:ok)
+        
+        json_response = JSON.parse(response.body)
+        expect(json_response['rewards'].count).to eq(3)
+        
+        reward_statuses = json_response['rewards'].map { |r| r['status'] }.uniq.sort
+        expect(reward_statuses).to eq(['active', 'redeemed'])
+      end
+    end
+    
+    context 'with specific status parameter' do
+      it 'returns only rewards with the specified status' do
+        get "/api/v1/users/#{user.user_id}/rewards?status=redeemed", headers: @auth_headers
+        
+        expect(response).to have_http_status(:ok)
+        
+        json_response = JSON.parse(response.body)
+        expect(json_response['rewards'].count).to eq(1)
+        
+        expect(json_response['rewards'][0]['status']).to eq('redeemed')
+      end
+    end
+    
+    it 'returns 404 for non-existent user' do
+      get '/api/v1/users/non-existent/rewards', headers: @auth_headers
+      
+      expect(response).to have_http_status(:not_found)
     end
   end
 end 

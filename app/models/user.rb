@@ -2,6 +2,7 @@ class User < ApplicationRecord
   acts_as_tenant :client
 
   has_many :transactions, dependent: :destroy
+  has_many :rewards, dependent: :destroy
 
   validates :user_id, presence: true, uniqueness: { scope: :client_id }
   validate :validate_user_id_format
@@ -34,6 +35,21 @@ class User < ApplicationRecord
         errors.add(:birth_date, "is unrealistically old")
       end
     end
+  end
+
+  # Get active rewards for a user
+  def active_rewards
+    rewards.active
+  end
+
+  # Check if user is currently in their birth month
+  def birthday_month?
+    birth_date.present? && birth_date.month == Date.today.month
+  end
+
+  # Check if user is a new user (joined within the last 60 days)
+  def new_user?
+    joining_date.present? && joining_date >= 60.days.ago
   end
 
   private

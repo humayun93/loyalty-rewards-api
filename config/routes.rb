@@ -10,6 +10,10 @@ Rails.application.routes.draw do
       get "ping", to: "ping#index"
       resources :users, param: :user_id do
         resources :transactions, only: [ :create ]
+        member do
+          get 'points'
+          get 'rewards'
+        end
       end
     end
   end

@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: [ :show, :update, :destroy ]
+      before_action :set_user, only: [ :show, :update, :destroy, :points, :rewards ]
 
       # GET /api/v1/users
       def index
@@ -47,6 +47,51 @@ module Api
       def destroy
         @user.destroy
         head :no_content
+      end
+      
+      # GET /api/v1/users/:user_id/points
+      def points
+        # Calculate monthly, yearly, and lifetime points
+        monthly_points = @user.transactions
+                              .where(created_at: Date.today.beginning_of_month..Date.today.end_of_month)
+                              .sum(:points_earned)
+                              
+        yearly_points = @user.transactions
+                             .where(created_at: Date.today.beginning_of_year..Date.today.end_of_year)
+                             .sum(:points_earned)
+                             
+        render json: {
+          user_id: @user.user_id,
+          current_points: @user.points,
+          monthly_points: monthly_points,
+          yearly_points: yearly_points
+        }
+      end
+      
+      # GET /api/v1/users/:user_id/rewards
+      def rewards
+        # Default to active rewards, allow filtering by status
+        status = params[:status] || 'active'
+        
+        if status == 'all'
+          user_rewards = @user.rewards
+        else
+          user_rewards = @user.rewards.where(status: status)
+        end
+        
+        render json: {
+          user_id: @user.user_id,
+          rewards: user_rewards.order(issued_at: :desc).map do |reward|
+            {
+              id: reward.id,
+              reward_type: reward.reward_type,
+              description: reward.description,
+              status: reward.status,
+              issued_at: reward.issued_at,
+              expires_at: reward.expires_at
+            }
+          end
+        }
       end
 
       private
