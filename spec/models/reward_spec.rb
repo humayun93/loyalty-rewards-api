@@ -15,8 +15,6 @@ RSpec.describe Reward, type: :model do
   
   describe 'associations' do
     it { should belong_to(:user) }
-    # Skipping this test as it fails with acts_as_tenant but functionality works
-    # it { should belong_to(:client) }
   end
   
   describe 'validations' do

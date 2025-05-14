@@ -3,6 +3,15 @@ class RewardEngine
   MONTHLY_POINTS_THRESHOLD = 100 # Points needed for free coffee
   NEW_USER_TRANSACTION_THRESHOLD = 1000 # Dollars needed in first 60 days for movie tickets
 
+  # Reward types
+  COFFEE_REWARD_TYPE = "free_coffee"
+  MOVIE_TICKET_REWARD_TYPE = "movie_tickets"
+  
+  # Reward descriptions
+  MONTHLY_COFFEE_DESCRIPTION = "Free coffee for earning %d+ points this month"
+  BIRTHDAY_COFFEE_DESCRIPTION = "Birthday month free coffee"
+  NEW_USER_MOVIE_DESCRIPTION = "New user spending reward"
+
   # Reward expiration configuration
   COFFEE_REWARD_EXPIRY = 30.days
   MOVIE_TICKET_EXPIRY = 60.days
@@ -14,6 +23,8 @@ class RewardEngine
 
   # Main method to process transaction and check for rewards
   def process_transaction(transaction)
+    return [] unless transaction && transaction.persisted?
+    
     rewards_issued = []
 
     # Check monthly points for free coffee
@@ -51,14 +62,15 @@ class RewardEngine
 
     # Check if user has already received a coffee reward this month
     existing_coffee_reward = @user.rewards
-                                .where(reward_type: "free_coffee",
+                                .where(reward_type: COFFEE_REWARD_TYPE,
+                                      description: MONTHLY_COFFEE_DESCRIPTION % MONTHLY_POINTS_THRESHOLD,
                                       issued_at: start_of_month..end_of_month,
                                       status: [ "active", "redeemed" ])
                                 .exists?
 
     if monthly_points >= MONTHLY_POINTS_THRESHOLD && !existing_coffee_reward
       # Issue free coffee reward
-      issue_reward("free_coffee", "Free coffee for earning #{MONTHLY_POINTS_THRESHOLD}+ points this month")
+      issue_reward(COFFEE_REWARD_TYPE, MONTHLY_COFFEE_DESCRIPTION % MONTHLY_POINTS_THRESHOLD)
     end
   end
 
@@ -74,15 +86,15 @@ class RewardEngine
       end_of_month = Date.today.end_of_month
 
       existing_birthday_reward = @user.rewards
-                                    .where(reward_type: "free_coffee",
-                                          description: "Birthday month free coffee",
+                                    .where(reward_type: COFFEE_REWARD_TYPE,
+                                          description: BIRTHDAY_COFFEE_DESCRIPTION,
                                           issued_at: start_of_month..end_of_month,
                                           status: [ "active", "redeemed" ])
                                     .exists?
 
       unless existing_birthday_reward
         # Issue birthday coffee reward
-        issue_reward("free_coffee", "Birthday month free coffee")
+        issue_reward(COFFEE_REWARD_TYPE, BIRTHDAY_COFFEE_DESCRIPTION)
       end
     else
       nil
@@ -96,8 +108,8 @@ class RewardEngine
 
     # Check if user already has movie ticket reward
     existing_movie_reward = @user.rewards
-                              .where(reward_type: "movie_tickets",
-                                    description: "New user spending reward",
+                              .where(reward_type: MOVIE_TICKET_REWARD_TYPE,
+                                    description: NEW_USER_MOVIE_DESCRIPTION,
                                     status: [ "active", "redeemed" ])
                               .exists?
 
@@ -116,7 +128,7 @@ class RewardEngine
 
     if total_spending >= NEW_USER_TRANSACTION_THRESHOLD
       # Issue movie tickets reward
-      issue_reward("movie_tickets", "New user spending reward", MOVIE_TICKET_EXPIRY)
+      issue_reward(MOVIE_TICKET_REWARD_TYPE, NEW_USER_MOVIE_DESCRIPTION, MOVIE_TICKET_EXPIRY)
     end
   end
 
