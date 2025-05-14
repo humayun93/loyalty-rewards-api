@@ -6,7 +6,7 @@ class RewardEngine
   # Reward types
   COFFEE_REWARD_TYPE = "free_coffee"
   MOVIE_TICKET_REWARD_TYPE = "movie_tickets"
-  
+
   # Reward descriptions
   MONTHLY_COFFEE_DESCRIPTION = "Free coffee for earning %d+ points this month"
   BIRTHDAY_COFFEE_DESCRIPTION = "Birthday month free coffee"
@@ -24,7 +24,7 @@ class RewardEngine
   # Main method to process transaction and check for rewards
   def process_transaction(transaction)
     return [] unless transaction && transaction.persisted?
-    
+
     rewards_issued = []
 
     # Check monthly points for free coffee

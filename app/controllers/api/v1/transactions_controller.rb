@@ -16,7 +16,7 @@ module Api
           # Wrap the entire processing in a transaction for atomicity
           points_earned = nil
           rewards_issued = []
-          
+
           ActiveRecord::Base.transaction do
             # Use user.with_lock to handle race conditions at the user level
             @user.with_lock do
