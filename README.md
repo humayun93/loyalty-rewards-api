@@ -82,7 +82,17 @@ rails db:seed
 # Create tenant schemas
 rails runner "Client.find_each { |c| Apartment::Tenant.create(c.subdomain) }"
 rails db:migrate:tenants
+```
 
+### Environment Configuration
+
+Create a `.env` file in the root directory with the following settings:
+
+```bash
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+EAGER_LOAD_DEV=true # only turn it on when stress testing
+CI=true # only for running performance tests in local env
 ```
 
 ## API Simulation
