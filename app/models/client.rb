@@ -5,6 +5,7 @@ class Client < ApplicationRecord
   has_secure_token :api_token, length: 24
 
   has_many :users, dependent: :destroy
+  has_many :transactions, dependent: :destroy
 
   validates :name, presence: true
   validates :subdomain, presence: true, uniqueness: true,

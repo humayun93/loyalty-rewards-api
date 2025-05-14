@@ -21,6 +21,9 @@ default: &default
   host: <%= ENV["DB_HOST"] %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  schema_search_path: "public"
+  # Use UUIDs by default for primary keys
+  primary_key_type: uuid
 
 
 development:

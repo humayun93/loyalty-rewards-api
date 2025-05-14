@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user do
-    user_id { Faker::Internet.email }
+    user_id { SecureRandom.uuid }
     birth_date { Faker::Date.birthday(min_age: 18, max_age: 65) }
     joining_date { Faker::Date.backward(days: 365) }
     points { 0 }

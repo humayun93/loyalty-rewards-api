@@ -1,7 +1,7 @@
 class ApiDocsController < ActionController::Base
   include Swagger::Blocks
 
-  swagger_root do
+  openapi_endpoint do
     key :swagger, "2.0"
     info do
       key :version, "1.0.0"

@@ -6,19 +6,28 @@ Built with **Ruby on Rails 7** and **PostgreSQL**, using **schema-per-tenant** i
 
 ---
 
-## Why Multi-Tenant (Schema-per-Tenant)?
+## Assumptions
+
+- **Fractional Points**: The system allows fractional loyalty points (e.g., 2.5 points for a $25 transaction), following the rule of 10 points per $100.
+- **Points Accumulation**: Fractional points are accumulated precisely, without rounding, until redemption.
+- **Multi-tenancy**: Each client's data is completely isolated in separate database schemas.
+- **Currency Conversion**: Foreign currency transactions are flagged but not converted; the amount is assumed to be already converted.
+
+---
+
+## Why Multi-Tenant with ActsAsTenant?
 
 This system is designed to support multiple client businesses each operating with isolated data.
 
-We chose the **schema-per-tenant** pattern because:
+We chose the **schema-per-tenant** pattern with ActsAsTenant because:
 
-- ✅ **Strong data isolation**: prevents cross-tenant access
-- ✅ **Improved query performance**: queries run on smaller, per-tenant tables
-- ✅ **Simplified backups and deletion**: entire tenant data can be dropped in one operation
-- ✅ **Per-tenant scaling**: supports future horizontal DB distribution
-- ✅ **Customizability**: allows unique indexes or business rules per tenant if needed
+- ✅ **Strong data isolation**: ActsAsTenant ensures queries are properly scoped to the current tenant
+- ✅ **Simple implementation**: Adds automatic tenant-scoping to models without complex query modifications
+- ✅ **Default security**: Prevents accidental cross-tenant data access at the application level
+- ✅ **Minimal query overhead**: Adds tenant conditions efficiently without significant performance impact
+- ✅ **Rails-native approach**: Works seamlessly with Active Record without custom database adapters
 
-This architecture enables **safe multi-client usage**, scales with workload, and aligns well with enterprise data protection policies (e.g., GDPR).
+This architecture enables **safe multi-client usage**, maintains data segregation, and aligns well with enterprise data protection policies (e.g., GDPR).
 
 ---
 

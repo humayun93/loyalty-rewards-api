@@ -63,7 +63,23 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '422':
-          $ref: '#/components/responses/UnprocessableEntity'
+          description: Unprocessable Entity - Invalid data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Birth date must be a valid date"
+                  errors:
+                    type: object
+                    description: Field-level validation errors
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                      example: ["can't be blank", "is invalid"]
   /users/{user_id}:
     parameters:
       - name: user_id
@@ -119,7 +135,23 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
-          $ref: '#/components/responses/UnprocessableEntity'
+          description: Unprocessable Entity - Invalid data provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Birth date must be a valid date"
+                  errors:
+                    type: object
+                    description: Field-level validation errors
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                      example: ["can't be blank", "is invalid"]
     delete:
       summary: Delete a user
       description: Deletes a specific user by user_id
@@ -135,6 +167,43 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+  /users/{user_id}/transactions:
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Unique identifier for the user within the client
+        schema:
+          type: string
+    post:
+      summary: Create a new transaction
+      description: Creates a new transaction for the specified user
+      operationId: createTransaction
+      tags:
+        - transactions
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionInput'
+      responses:
+        '201':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
   /ping:
     get:
       summary: API health check
@@ -205,14 +274,75 @@ components:
           type: string
           format: date
           nullable: true
-          description: User's birth date
+          description: User's birth date (must be a valid date in YYYY-MM-DD format)
         joining_date:
           type: string
           format: date
           nullable: true
-          description: Date when the user joined
+          description: Date when the user joined (must be a valid date in YYYY-MM-DD format)
       required:
         - user_id
+    TransactionInput:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+          description: Transaction amount
+        currency:
+          type: string
+          description: Currency code (e.g., USD, EUR)
+        foreign:
+          type: boolean
+          description: Whether this is a foreign transaction
+          default: false
+      required:
+        - amount
+        - currency
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+          description: Internal database ID
+        user_id:
+          type: string
+          description: The user ID associated with this transaction
+        amount:
+          type: string
+          description: Transaction amount
+        currency:
+          type: string
+          description: Currency code
+        foreign:
+          type: boolean
+          description: Whether this is a foreign transaction
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - amount
+        - currency
+    TransactionResponse:
+      type: object
+      properties:
+        transaction:
+          $ref: '#/components/schemas/Transaction'
+        points_earned:
+          type: number
+          format: float
+          description: Points earned from this transaction
+        user_total_points:
+          type: number
+          format: float
+          description: User's total points after this transaction
     Error:
       type: object
       properties:
@@ -226,26 +356,50 @@ components:
               type: string
   responses:
     BadRequest:
-      description: Invalid request format
+      description: Bad Request - Invalid input
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid request parameters"
     Unauthorized:
-      description: Missing or invalid authentication
+      description: Unauthorized - API token is missing or invalid
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Access denied"
     NotFound:
-      description: Resource not found
+      description: Not Found - The requested resource was not found
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            type: object
+            properties:
+              error:
+                type: string
+                example: "User not found"
     UnprocessableEntity:
-      description: Validation errors
+      description: Unprocessable Entity - Invalid data provided
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error' 
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Birth date must be a valid date"
+              errors:
+                type: object
+                description: Field-level validation errors
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+                  example: ["can't be blank", "is invalid"] 
