@@ -23,6 +23,12 @@ RSpec.describe PointsService, type: :service do
         with_tenant(client) do
           transaction = build(:transaction, user: user, amount: 105.75, foreign: false)
           expect(PointsService.calculate_points(transaction)).to eq(10.575)
+          
+          transaction = build(:transaction, user: user, amount: 33.33, foreign: false)
+          expect(PointsService.calculate_points(transaction)).to eq(3.333)
+          
+          transaction = build(:transaction, user: user, amount: 67.89, foreign: false)
+          expect(PointsService.calculate_points(transaction)).to eq(6.789)
         end
       end
       
@@ -79,6 +85,13 @@ RSpec.describe PointsService, type: :service do
           # $5 foreign should give 1 points (0.5 * 2 = 1)
           transaction = build(:transaction, user: user, amount: 5, foreign: true)
           expect(PointsService.calculate_points(transaction)).to eq(1)
+          
+          # Test with specific floating point amounts
+          transaction = build(:transaction, user: user, amount: 42.42, foreign: true)
+          expect(PointsService.calculate_points(transaction)).to eq(8.484)
+          
+          transaction = build(:transaction, user: user, amount: 99.99, foreign: true)
+          expect(PointsService.calculate_points(transaction)).to eq(19.998)
         end
       end
     end

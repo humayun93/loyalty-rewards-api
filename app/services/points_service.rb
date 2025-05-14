@@ -4,17 +4,21 @@ class PointsService
   BASE_AMOUNT = 100
   # 2x points for foreign spending
   FOREIGN_MULTIPLIER = 2
+  # Round to 3 decimal places for consistent results in tests
+  PRECISION = 3
 
   # Calculate points earned for a transaction
   def self.calculate_points(transaction)
     # Calculate base points (10 points per $100)
-
-    base_points = (transaction.amount / BASE_AMOUNT * BASE_POINTS_RATE)
+    # Use to_f to ensure we get fractional points for smaller amounts
+    base_points = (transaction.amount.to_f / BASE_AMOUNT * BASE_POINTS_RATE)
 
     # Apply 2x multiplier for foreign transactions
     multiplier = transaction.foreign ? FOREIGN_MULTIPLIER : 1
 
-    base_points * multiplier
+    result = base_points * multiplier
+
+    result.round(PRECISION)
   end
 
   # Process a transaction by calculating points and updating user's total

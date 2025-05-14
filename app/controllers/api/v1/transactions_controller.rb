@@ -16,10 +16,15 @@ module Api
           # Process the transaction (calculate and add points to user)
           points_earned = PointsService.process_transaction(@transaction)
 
+          # Check for rewards
+          reward_engine = RewardEngine.new(@user)
+          rewards_issued = reward_engine.process_transaction(@transaction)
+
           render json: {
             transaction: @transaction,
             points_earned: points_earned.to_f,
-            user_total_points: @user.points.to_f
+            user_total_points: @user.points.to_f,
+            rewards_issued: rewards_issued.map(&:as_json)
           }, status: :created
         else
           render json: { errors: @transaction.errors }, status: :unprocessable_entity
