@@ -66,6 +66,40 @@ Both tests provide performance metrics including:
 4. **Gradually Increase Load**: Start with small numbers and gradually increase to find performance limits.
 5. **Analyze Bottlenecks**: Use the results to identify performance bottlenecks in your application.
 
+## Benchmark Trend Analysis
+
+The performance tests automatically record benchmark data in `spec/benchmarks/transaction_benchmarks.csv`. To analyze performance trends over time:
+
+```bash
+# Run the standalone analysis script
+ruby spec/benchmark_analysis.rb
+```
+
+### Understanding the Trend Analysis
+
+The trend analysis provides several key metrics:
+
+- **Total runs**: Number of test runs recorded for each benchmark
+- **First/Latest run**: Timestamps and execution times for the first and most recent test runs
+- **Average/Min/Max time**: Overall performance statistics across all runs
+- **Recent trend**: For tests with 3+ runs, shows whether performance is improving or degrading
+  - **Improving**: Recent runs are faster than older runs (negative percentage)
+  - **Degrading**: Recent runs are slower than older runs (positive percentage)
+
+Example output:
+```
+Test: parallel_multi_user
+Total runs: 4
+First run: 2025-05-14 23:40:02 - 0.9838s
+Latest run: 2025-05-14 23:44:45 - 0.8168s
+Average time: 0.8568s
+Min time: 0.7269s
+Max time: 0.9838s
+Recent trend: improving (-17.22%)
+```
+
+This indicates the `parallel_multi_user` test has improved by 17.22% over time.
+
 ## Troubleshooting
 
 If the stress tests are causing database connection issues:
@@ -73,7 +107,38 @@ If the stress tests are causing database connection issues:
 - Adjust the concurrency level to be below your connection pool size
 - Consider increasing database connection pool for testing
 
-If you encounter timeout errors:
-- Your application may be struggling with the load
-- Try reducing the concurrency or number of transactions
-- Check for N+1 query issues in the transaction creation flow 
+## Stress test report
+
+========================================================
+Starting Transaction API Stress Test
+========================================================
+Configuration:
+  - Number of users: 1000
+  - Transactions per user: 50
+  - Concurrency level: 20
+  - Total transactions: 50000
+========================================================
+
+Creating 1000 test users...
+....................................................................................................
+Users created.
+Generating 50000 transaction requests...
+Processing transactions with 20 concurrent threads...
+Progress: 100% complete (50000 succeeded, 0 failed)
+
+========================================================
+Stress Test Results
+========================================================
+Total time: 524.27 seconds
+Total transactions: 50000
+Successful transactions: 50000
+Failed transactions: 0
+Success rate: 100.0%
+Transactions per second: 95.37
+Average response time: 0.2096 seconds
+Minimum response time: 0.1127 seconds
+Maximum response time: 0.3145 seconds
+========================================================
+
+Verifying database state...
+All database checks passed!

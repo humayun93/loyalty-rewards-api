@@ -17,7 +17,7 @@ RSpec.describe 'Transaction Controller Stress Tests', type: :request do
   end
   
   # Add benchmark tracking
-  let(:benchmark_file) { Rails.root.join('tmp', 'benchmarks', 'transaction_benchmarks.csv') }
+  let(:benchmark_file) { Rails.root.join('spec', 'benchmarks', 'transaction_benchmarks.csv') }
   
   # Helper method to save benchmark results
   def save_benchmark(test_name, time_taken, transaction_count)
@@ -464,7 +464,7 @@ RSpec.describe 'Transaction Controller Stress Tests', type: :request do
       end
     end
     
-    # Add a task to analyze benchmark trends
+    # Add a task to analyze benchmark trends, skip: 'Run this test separately to analyze trends' do
     it 'provides benchmark trend analysis', skip: 'Run this test separately to analyze trends' do
       return unless File.exist?(benchmark_file)
       

@@ -1,0 +1,15 @@
+timestamp,test_name,time_taken,transaction_count,avg_time_per_transaction
+2025-05-14 23:59:34,parallel_same_user,0.3374,25,0.013498
+2025-05-14 23:59:35,parallel_multi_user,0.8274,50,0.016548
+2025-05-14 23:59:36,sequential_transactions,0.9939,50,0.019878
+2025-05-14 23:59:37,mixed_transactions,0.463,30,0.015434
+2025-05-14 23:59:38,high_volume_variations,0.7399,40,0.018497
+2025-05-14 23:59:38,birthday_user_transactions,0.1819,12,0.015162
+2025-05-14 23:59:38,new_user_transactions,0.1989,12,0.016579
+2025-05-14 23:59:48,parallel_same_user,0.3587,25,0.014349
+2025-05-14 23:59:50,parallel_multi_user,0.8648,50,0.017296
+2025-05-14 23:59:51,sequential_transactions,1.0076,50,0.020153
+2025-05-14 23:59:52,mixed_transactions,0.4643,30,0.015477
+2025-05-14 23:59:52,high_volume_variations,0.6892,40,0.017231
+2025-05-14 23:59:53,birthday_user_transactions,0.201,12,0.016754
+2025-05-14 23:59:53,new_user_transactions,0.2002,12,0.016684

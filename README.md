@@ -88,3 +88,7 @@ rails db:migrate:tenants
 ## API Simulation
 
 For a complete script that demonstrates the API functionality and workflow, please see [API Simulation Documentation](api_simulation_readme.md).
+
+## Performance Documentation
+
+For details about system performance characteristics, optimizations, and benchmarks, see [Performance Documentation](performance_documentation.md).
