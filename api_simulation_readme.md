@@ -32,12 +32,19 @@ CLIENT2_TOKEN=your_client2_api_token
 
 ### Running the Simulation
 
+Run: 
+
+```bash
+rails db:seed
+```
+to seed clients and get theri api tokens.
+
 ```bash
 # Make the script executable
 chmod +x loyalty_api_simulation.rb
 
 # Run the simulation
-./loyalty_api_simulation.rb
+API_URL=http://localhost:3000 CLIENT1_TOKEN=token  CLIENT2_TOKEN=token2 ./loyalty_api_simulation.rb
 ```
 
 ## Simulation Steps

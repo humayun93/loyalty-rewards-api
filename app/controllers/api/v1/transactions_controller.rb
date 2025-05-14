@@ -12,13 +12,23 @@ module Api
           client: current_client
         )
 
-        if @transaction.save
-          # Process the transaction (calculate and add points to user)
-          points_earned = PointsService.process_transaction(@transaction)
+        if @transaction.valid?
+          # Wrap the entire processing in a transaction for atomicity
+          points_earned = nil
+          rewards_issued = []
 
-          # Check for rewards
-          reward_engine = RewardEngine.new(@user)
-          rewards_issued = reward_engine.process_transaction(@transaction)
+          ActiveRecord::Base.transaction do
+            # Use user.with_lock to handle race conditions at the user level
+            @user.with_lock do
+              @transaction.save
+              # Process the transaction (calculate and add points to user)
+              points_earned = PointsService.process_transaction(@transaction)
+
+              # Check for rewards
+              reward_engine = RewardEngine.new(@user)
+              rewards_issued = reward_engine.process_transaction(@transaction)
+            end
+          end
 
           render json: {
             transaction: @transaction,

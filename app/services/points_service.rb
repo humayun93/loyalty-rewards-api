@@ -4,7 +4,7 @@ class PointsService
   BASE_AMOUNT = 100
   # 2x points for foreign spending
   FOREIGN_MULTIPLIER = 2
-  # Round to 3 decimal places for consistent results in tests
+  # Round to 3 decimal places for consistent results
   PRECISION = 3
 
   # Calculate points earned for a transaction
@@ -24,14 +24,15 @@ class PointsService
   # Process a transaction by calculating points and updating user's total
   def self.process_transaction(transaction)
     # Calculate points if not already set
-    transaction.points_earned = calculate_points(transaction) if transaction.points_earned.zero?
+    if transaction.points_earned.zero?
+      transaction.points_earned = calculate_points(transaction)
+      transaction.save! # Save the transaction with points_earned
+    end
 
     # Update user's points total
     user = transaction.user
-    user.with_lock do
-      user.points += transaction.points_earned
-      user.save!
-    end
+    user.points += transaction.points_earned
+    user.save!
 
     transaction.points_earned
   end
