@@ -27,6 +27,4 @@ RSpec.describe Client, type: :model do
       expect(client.api_token).not_to eq(original_token)
     end
   end
-
-  # We've removed tenant schema creation with Apartment, so these tests are no longer relevant
 end 

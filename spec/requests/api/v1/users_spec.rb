@@ -44,7 +44,6 @@ RSpec.describe 'API V1 Users', type: :request do
       
       it 'cannot access users from client2' do
         # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client1
         
         get "/api/v1/users/#{@client2_user.user_id}", headers: @auth_headers
         
@@ -55,7 +54,6 @@ RSpec.describe 'API V1 Users', type: :request do
     describe 'POST /api/v1/users' do
       it 'creates a user associated with client1' do
         # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client1
         
         new_uuid = SecureRandom.uuid
         user_params = {
@@ -85,12 +83,43 @@ RSpec.describe 'API V1 Users', type: :request do
           expect(new_user.client).to eq(client1)
         end
       end
+      
+      it 'validates birth_date format' do
+        user_params = {
+          user: {
+            user_id: SecureRandom.uuid,
+            birth_date: 'invalid-date',
+            joining_date: '2020-01-01'
+          }
+        }
+        
+        post '/api/v1/users', params: user_params, headers: @auth_headers
+        
+        expect(response).to have_http_status(:unprocessable_entity)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq('Birth date must be a valid date')
+      end
+      
+      it 'validates joining_date format' do
+        user_params = {
+          user: {
+            user_id: SecureRandom.uuid,
+            birth_date: '1990-01-01',
+            joining_date: 'not-a-date'
+          }
+        }
+        
+        post '/api/v1/users', params: user_params, headers: @auth_headers
+        
+        expect(response).to have_http_status(:unprocessable_entity)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq('Joining date must be a valid date')
+      end
     end
     
     describe 'PATCH/PUT /api/v1/users/:user_id' do
       it 'updates the requested user' do
         # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client1
         
         updated_params = {
           user: {
@@ -112,9 +141,36 @@ RSpec.describe 'API V1 Users', type: :request do
         end
       end
       
+      it 'validates birth_date format on update' do
+        updated_params = {
+          user: {
+            birth_date: 'invalid-date-format'
+          }
+        }
+        
+        put "/api/v1/users/#{@client1_user1.user_id}", params: updated_params, headers: @auth_headers
+        
+        expect(response).to have_http_status(:unprocessable_entity)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq('Birth date must be a valid date')
+      end
+      
+      it 'validates joining_date format on update' do
+        updated_params = {
+          user: {
+            joining_date: 'bad-date'
+          }
+        }
+        
+        put "/api/v1/users/#{@client1_user1.user_id}", params: updated_params, headers: @auth_headers
+        
+        expect(response).to have_http_status(:unprocessable_entity)
+        json_response = JSON.parse(response.body)
+        expect(json_response['error']).to eq('Joining date must be a valid date')
+      end
+      
       it 'cannot update users from client2' do
         # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client1
         
         updated_params = {
           user: {
@@ -131,7 +187,6 @@ RSpec.describe 'API V1 Users', type: :request do
     describe 'DELETE /api/v1/users/:user_id' do
       it 'destroys the requested user' do
         # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client1
         
         expect {
           delete "/api/v1/users/#{@client1_user1.user_id}", headers: @auth_headers
@@ -144,7 +199,6 @@ RSpec.describe 'API V1 Users', type: :request do
       
       it 'cannot destroy users from client2' do
         # Set the current tenant before making the request
-        ActsAsTenant.current_tenant = client1
         
         expect {
           delete "/api/v1/users/#{@client2_user.user_id}", headers: @auth_headers
