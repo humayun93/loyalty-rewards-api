@@ -9,6 +9,8 @@ Built with **Ruby on Rails 7** and **PostgreSQL**, using **schema-per-tenant** i
 ## Assumptions
 
 - **Fractional Points**: The system allows fractional loyalty points (e.g., 2.5 points for a $25 transaction), following the rule of 10 points per $100.
+- **Points Precision**: Points are stored with a precision of 10 digits and 3 decimal places for fine-grained accumulation.
+- **Transaction Amounts**: Transaction amounts are stored with a precision of 10 digits and 2 decimal places.
 - **Points Accumulation**: Fractional points are accumulated precisely, without rounding, until redemption.
 - **Multi-tenancy**: Each client's data is completely isolated in separate database schemas.
 - **Currency Conversion**: Foreign currency transactions are flagged but not converted; the amount is assumed to be already converted.
