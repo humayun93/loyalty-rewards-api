@@ -15,7 +15,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_14_015331) do
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
 
-  create_table "clients", force: :cascade do |t|
+  create_table "clients", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "subdomain"
     t.string "api_token"
@@ -25,8 +25,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_14_015331) do
   end
 
   create_table "rewards", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "client_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "client_id", null: false
     t.string "reward_type", null: false
     t.datetime "issued_at", null: false
     t.datetime "expires_at"
@@ -39,25 +39,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_14_015331) do
     t.index ["user_id"], name: "index_rewards_on_user_id"
   end
 
-  create_table "transactions", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
     t.decimal "amount", precision: 10, scale: 2, null: false
     t.string "currency", default: "USD", null: false
     t.boolean "foreign", default: false, null: false
-    t.decimal "points_earned", precision: 10, scale: 2, default: 0, null: false
+    t.decimal "points_earned", precision: 10, scale: 3, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "client_id", null: false
+    t.uuid "client_id", null: false
     t.index ["client_id"], name: "index_transactions_on_client_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "user_id", null: false
     t.datetime "joining_date"
     t.datetime "birth_date"
-    t.decimal "points", precision: 10, scale: 2, default: 0, null: false
-    t.bigint "client_id", null: false
+    t.decimal "points", precision: 10, scale: 3, default: "0.0", null: false
+    t.uuid "client_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id", "user_id"], name: "index_users_on_client_id_and_user_id", unique: true

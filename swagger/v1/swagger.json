@@ -549,7 +549,7 @@
           "amount": {
             "type": "number",
             "format": "float",
-            "description": "Transaction amount"
+            "description": "Transaction amount (precision: 10, scale: 2)"
           },
           "currency": {
             "type": "string",
@@ -581,7 +581,7 @@
           },
           "amount": {
             "type": "string",
-            "description": "Transaction amount"
+            "description": "Transaction amount (precision: 10, scale: 2)"
           },
           "currency": {
             "type": "string",
@@ -590,6 +590,11 @@
           "foreign": {
             "type": "boolean",
             "description": "Whether this is a foreign transaction"
+          },
+          "points_earned": {
+            "type": "number",
+            "format": "float",
+            "description": "Points earned from this transaction (precision: 10, scale: 3)"
           },
           "created_at": {
             "type": "string",
@@ -616,12 +621,12 @@
           "points_earned": {
             "type": "number",
             "format": "float",
-            "description": "Points earned from this transaction"
+            "description": "Points earned from this transaction (precision: 10, scale: 3)"
           },
           "user_total_points": {
             "type": "number",
             "format": "float",
-            "description": "User's total points after this transaction"
+            "description": "User's total points after this transaction (precision: 10, scale: 3)"
           }
         }
       },
@@ -652,7 +657,7 @@
           "current_points": {
             "type": "number",
             "format": "float",
-            "description": "Current total points balance"
+            "description": "Current total points balance (precision: 10, scale: 3)"
           },
           "monthly_points": {
             "type": "object",

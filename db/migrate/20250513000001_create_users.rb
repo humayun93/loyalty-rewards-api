@@ -4,7 +4,7 @@ class CreateUsers < ActiveRecord::Migration[8.0]
       t.string :user_id, null: false
       t.datetime :joining_date, null: true
       t.datetime :birth_date, null: true
-      t.decimal :points, default: 0, null: false, precision: 10, scale: 2
+      t.decimal :points, default: 0, null: false, precision: 10, scale: 3
 
       t.references :client, null: false, foreign_key: true, type: :uuid
 
