@@ -35,7 +35,7 @@ module Api
       def update
         # Validate dates before updating user
         return if invalid_dates?(params[:user])
-        
+
         if @user.update(user_params)
           render json: @user
         else
@@ -61,7 +61,7 @@ module Api
       def user_params
         params.require(:user).permit(:user_id, :birth_date, :joining_date)
       end
-      
+
       def invalid_dates?(user_params)
         if user_params[:birth_date].present?
           begin
@@ -71,7 +71,7 @@ module Api
             return true
           end
         end
-        
+
         if user_params[:joining_date].present?
           begin
             Date.parse(user_params[:joining_date])
@@ -80,7 +80,7 @@ module Api
             return true
           end
         end
-        
+
         false
       end
     end
