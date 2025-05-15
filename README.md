@@ -12,7 +12,7 @@ Built with **Ruby on Rails 8** and **PostgreSQL**, using **row-based multi-tenan
 - **Points Precision**: Points are stored with a precision of 10 digits and 3 decimal places for fine-grained accumulation.
 - **Transaction Amounts**: Transaction amounts are stored with a precision of 10 digits and 2 decimal places.
 - **Points Accumulation**: Fractional points are accumulated precisely, without rounding, until redemption.
-- **Multi-tenancy**: Each client's data is completely isolated in separate database schemas.
+- **Multi-tenancy**: Each client's data is completely isolated using row level tenancy.
 - **Currency Conversion**: Foreign currency transactions are flagged but not converted; the amount is assumed to be already converted.
 - **User Identifiers**: User IDs must be URL-safe strings (can include letters, numbers, hyphens, underscores, and tildes). They cannot contain spaces, periods, or email addresses. UUIDs are recommended.
 
