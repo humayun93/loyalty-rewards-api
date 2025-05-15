@@ -62,11 +62,11 @@ This architecture enables **safe multi-client usage**, maintains data segregatio
 
 ## Stack
 
-- Ruby on Rails 7 (API-only)
+- Ruby on Rails 8 (API-only)
 - PostgreSQL 13+
 - Act_As_Tenant gem
 - RSpec (for testing)
-- Swagger / Redoc (for documentation)
+- Swagger (for documentation)
 - Docker (for deployment)
 ---
 
