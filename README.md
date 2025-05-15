@@ -86,7 +86,7 @@ cp .env.example .env  # Edit the .env file as needed
 docker-compose up -d
 
 # Run database migrations and seed data
-docker-compose exec api rails db:create db:migrate db:seed
+docker-compose exec api bundle exec rails db:create db:migrate db:seed
 
 # The seed command will display the API keys that can be used for testing
 
