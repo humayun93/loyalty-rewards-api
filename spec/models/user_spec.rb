@@ -40,14 +40,38 @@ RSpec.describe User, type: :model do
       expect(user.errors[:user_id]).to include('cannot be an email address. Please use a UUID or other identifier.')
     end
     
-    it 'allows arbitrary string formats for user_id' do
+    it 'disallows spaces in user_id' do
+      user = build(:user, user_id: 'user 123')
+      expect(user).not_to be_valid
+      expect(user.errors[:user_id]).to include('cannot contain spaces')
+    end
+    
+    it 'disallows non-URL-safe characters in user_id' do
+      invalid_ids = [
+        'user&123',      # Ampersand
+        'user/123',      # Slash
+        'user+name',     # Plus sign
+        'user?param=1',  # Question mark
+        'user#section',  # Hash
+        'user.name'      # Period - now disallowed
+      ]
+      
+      invalid_ids.each do |id|
+        user = build(:user, user_id: id)
+        expect(user).not_to be_valid, "Expected user_id '#{id}' to be invalid"
+        expect(user.errors[:user_id]).to include('can only contain URL-safe characters (letters, numbers, and -_~)')
+      end
+    end
+    
+    it 'allows URL-safe formats for user_id' do
       # Test various valid user_id formats
       valid_ids = [
         'user123',               # Simple string
         'abc-123-xyz',           # Hyphenated string
         '123456789',             # Numeric string
-        SecureRandom.uuid,       # UUID still works
-        'custom_id_format_123'   # Custom format
+        SecureRandom.uuid,       # UUID works
+        'custom_id_format_123',  # Underscore format
+        'my~username'            # Tilde
       ]
       
       valid_ids.each do |id|

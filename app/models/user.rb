@@ -13,10 +13,20 @@ class User < ApplicationRecord
     super(options.merge(only: [ :user_id, :birth_date, :points, :joining_date, :created_at, :updated_at ]))
   end
 
-  # Custom validation to ensure user_id is not an email
+  # Custom validation to ensure user_id is not an email and is URL-safe
   def validate_user_id_format
-    if user_id.present? && user_id.include?("@")
-      errors.add(:user_id, "cannot be an email address. Please use a UUID or other identifier.")
+    if user_id.present?
+      if user_id.include?("@")
+        errors.add(:user_id, "cannot be an email address. Please use a UUID or other identifier.")
+      end
+
+      if user_id.include?(" ")
+        errors.add(:user_id, "cannot contain spaces")
+      end
+
+      unless user_id.match?(/\A[A-Za-z0-9\-_~]+\z/)
+        errors.add(:user_id, "can only contain URL-safe characters (letters, numbers, and -_~)")
+      end
     end
   end
 

@@ -13,3 +13,17 @@ timestamp,test_name,time_taken,transaction_count,avg_time_per_transaction
 2025-05-14 23:59:52,high_volume_variations,0.6892,40,0.017231
 2025-05-14 23:59:53,birthday_user_transactions,0.201,12,0.016754
 2025-05-14 23:59:53,new_user_transactions,0.2002,12,0.016684
+2025-05-15 03:15:35,parallel_same_user,0.3703,25,0.014811
+2025-05-15 03:15:37,parallel_multi_user,1.1126,50,0.022252
+2025-05-15 03:15:39,sequential_transactions,2.0064,50,0.040127
+2025-05-15 03:15:40,mixed_transactions,0.5078,30,0.016926
+2025-05-15 03:15:40,high_volume_variations,0.6602,40,0.016506
+2025-05-15 03:15:41,birthday_user_transactions,0.2057,12,0.017142
+2025-05-15 03:15:41,new_user_transactions,0.2297,12,0.019142
+2025-05-15 03:33:40,parallel_same_user,0.3935,25,0.015738
+2025-05-15 03:33:41,parallel_multi_user,0.9752,50,0.019504
+2025-05-15 03:33:43,sequential_transactions,1.103,50,0.02206
+2025-05-15 03:33:43,mixed_transactions,0.4622,30,0.015406
+2025-05-15 03:33:44,high_volume_variations,0.6986,40,0.017465
+2025-05-15 03:33:44,birthday_user_transactions,0.2214,12,0.018448
+2025-05-15 03:33:44,new_user_transactions,0.2194,12,0.018287
