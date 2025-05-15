@@ -24,11 +24,11 @@ This system is designed to support multiple client businesses, each operating wi
 
 We chose the row-based multi-tenancy pattern with ActsAsTenant because:
 
-✅ Strong data isolation: ActsAsTenant ensures queries are scoped to the current tenant
-✅ Simple implementation: Adds automatic tenant scoping to models without complex query modifications
-✅ Default security: Prevents accidental cross-tenant data access at the application level
-✅ Minimal query overhead: Adds tenant conditions efficiently without significant performance impact
-✅ Rails-native approach: Works seamlessly with Active Record without custom database adapters
+- ✅ **Strong data isolation:** ActsAsTenant ensures queries are scoped to the current tenant
+- ✅ **Simple implementation:** Adds automatic tenant scoping to models without complex query modifications
+- ✅ **Default security:** Prevents accidental cross-tenant data access at the application level
+- ✅ **Minimal query overhead:** Adds tenant conditions efficiently without significant performance impact
+- ✅ **Rails-native approach:** Works seamlessly with Active Record without custom database adapters
 
 This architecture enables safe multi-client usage, maintains data segregation, and aligns well with enterprise data protection policies (e.g., GDPR).
 
