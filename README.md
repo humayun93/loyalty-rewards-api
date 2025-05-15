@@ -87,8 +87,19 @@ docker-compose up -d
 
 # Run database migrations and seed data
 docker-compose exec api rails db:create db:migrate db:seed
+# The seed command will display the API keys that can be used for testing
+```bash
+Creating clients...
+Created client Acme Corporation with token: token_1
+Created client Globex Industries with token: token_2
+Created client Oceanic Airlines with token: token_3
+Finished creating clients
+```
 # The API should now be available at http://localhost:3000
 
+
+# To run the API simulation (optional)
+`API_URL=http://localhost:3000 CLIENT1_TOKEN=token_1  CLIENT2_TOKEN=token_2 ruby loyalty_api_simulation.rb`
 ```
 To view logs:
 ```bash
