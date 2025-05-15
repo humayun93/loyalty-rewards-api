@@ -99,7 +99,7 @@ Finished creating clients
 # The API should now be available at http://localhost:3000
 
 # To run the API simulation (optional)
-`API_URL=http://localhost:3000 CLIENT1_TOKEN=token_1  CLIENT2_TOKEN=token_2 ruby loyalty_api_simulation.rb`
+API_URL=http://localhost:3000 CLIENT1_TOKEN=token_1  CLIENT2_TOKEN=token_2 ruby loyalty_api_simulation.rb
 ```
 
 To view logs:

@@ -25,7 +25,7 @@ clients.each do |client_attrs|
     client.save!
     puts "Created client #{client.name}, subdmain: #{client.subdmain} with token: #{client.api_token}"
   else
-    puts "Client #{client.name} already exists"
+    puts "Client #{client.name} already exists, #{client.subdomain} with token: #{client.api_token}"
   end
 end
 
