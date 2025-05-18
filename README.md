@@ -141,7 +141,7 @@ For a complete script that demonstrates the API functionality and workflow, plea
 
 ## Performance Documentation
 
-For details about system performance characteristics, optimizations, and benchmarks, see [Performance Documentation](spec/performance/README.md.md).
+For details about system performance characteristics, optimizations, and benchmarks, see [Performance Documentation](spec/performance/README.md).
 
 
 ### Further Development - Subdomain Isolation Plan
